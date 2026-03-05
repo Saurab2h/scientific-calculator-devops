@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        maven 'Maven'
+    }
+
     environment {
         DOCKER_IMAGE = "saurab2h/scientific-calculator"
     }
@@ -32,11 +36,10 @@ pipeline {
             }
         }
 
-        stage('Push to DockerHub') {
+        stage('Push Docker Image') {
             steps {
                 sh 'docker push $DOCKER_IMAGE'
             }
         }
-
     }
 }
