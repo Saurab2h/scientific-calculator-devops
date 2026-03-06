@@ -10,7 +10,7 @@ stages {
     stage('Clone Repo') {
         steps {
             git branch: 'main',
-            url: 'git@github.com:Poojan-Pandyaa/SPE_MiniProject_Scientific_Calc.git'
+            url: 'https://github.com/Saurab2h/scientific-calculator-devops.git'
         }
     }
 
