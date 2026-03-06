@@ -43,6 +43,5 @@
         state: started
         recreate: yes
         tty: true
-        stdin_open: true
-        ports:
+        ports:   
           - "8081:8080"
