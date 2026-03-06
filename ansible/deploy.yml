@@ -1,0 +1,42 @@
+---
+- name: Deploy Scientific Calculator
+  hosts: localhost
+  become: yes
+
+  tasks:
+
+    - name: Check if Docker is installed
+      command: docker --version
+      register: docker_check
+      ignore_errors: yes
+
+    - name: Install Docker if not present
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+      when: docker_check.rc != 0
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Pull latest Docker image
+      docker_image:
+        name: saurab2h/scientific-calculator
+        source: pull
+
+    - name: Remove old container if exists
+      docker_container:
+        name: calculator
+        state: absent
+      ignore_errors: yes
+
+    - name: Run calculator container
+      docker_container:
+        name: calculator
+        image: saurab2h/scientific-calculator
+        state: started
+        recreate: yes
