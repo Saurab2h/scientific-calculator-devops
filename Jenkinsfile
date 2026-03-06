@@ -38,24 +38,22 @@ pipeline {
 
         stage('Push Docker Image to DockerHub') {
             steps {
-                sh '''
-                docker login -u saurab2h -p $DOCKER_PASSWORD
-                docker push saurab2h/scientific-calculator
-                '''
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds',
+                usernameVariable: 'DOCKER_USER',
+                passwordVariable: 'DOCKER_PASS')]) {
+
+                    sh '''
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    docker push $DOCKER_USER/$IMAGE_NAME
+                    '''
+                }
             }
         }
 
         stage('Cleanup Docker Images') {
             steps {
-                sh 'docker rmi saurab2h/scientific-calculator || true'
+                sh 'docker rmi $DOCKER_USER/$IMAGE_NAME || true'
             }
         }
-
-        stage('Ansible Deployment') {
-            steps {
-                sh 'ansible-playbook ansible/deploy.yml || true'
-            }
-        }
-
     }
 }
