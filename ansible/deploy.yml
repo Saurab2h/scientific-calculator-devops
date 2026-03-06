@@ -40,3 +40,5 @@
         image: saurab2h/scientific-calculator
         state: started
         recreate: yes
+        tty: true
+        stdin_open: true
