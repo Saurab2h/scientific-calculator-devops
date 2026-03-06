@@ -6,51 +6,56 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE = "saurab2h/scientific-calculator"
+        DOCKER_USER = "saurab2h"
+        IMAGE_NAME = "scientific-calculator"
     }
 
     stages {
 
-        stage('Clone Repository') {
+        stage('Git Clone') {
             steps {
-                git 'https://github.com/Saurab2h/scientific-calculator-devops.git'
+                git branch: 'main', url: 'https://github.com/Saurab2h/scientific-calculator-devops.git'
             }
         }
 
-        stage('Build Maven Project') {
+        stage('Maven Build') {
             steps {
                 sh 'mvn clean package'
             }
         }
 
-        stage('Run Tests') {
+        stage('Publish Test Results') {
             steps {
-                sh 'mvn test'
-            }
-        }
-
-        stage('Docker Login') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'USERNAME',
-                    passwordVariable: 'PASSWORD'
-                )]) {
-                    sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
-                }
+                junit 'target/surefire-reports/*.xml'
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE -f docker/Dockerfile .'
+                sh 'docker build -t $DOCKER_USER/$IMAGE_NAME -f docker/Dockerfile .'
             }
         }
 
-        stage('Push Docker Image') {
+        stage('Push Docker Image to DockerHub') {
             steps {
-                sh 'docker push $DOCKER_IMAGE'
+                sh '''
+                docker login -u saurab2h -p $DOCKER_PASSWORD
+                docker push saurab2h/scientific-calculator
+                '''
             }
         }
+
+        stage('Cleanup Docker Images') {
+            steps {
+                sh 'docker rmi saurab2h/scientific-calculator || true'
+            }
+        }
+
+        stage('Ansible Deployment') {
+            steps {
+                sh 'ansible-playbook ansible/deploy.yml || true'
+            }
+        }
+
     }
 }
