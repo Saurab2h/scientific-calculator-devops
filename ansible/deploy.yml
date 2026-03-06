@@ -1,7 +1,9 @@
 ---
 - name: Deploy Scientific Calculator
   hosts: localhost
-  become: yes
+  connection: local
+  gather_facts: yes
+  become: no
 
   tasks:
 
@@ -42,3 +44,5 @@
         recreate: yes
         tty: true
         stdin_open: true
+        ports:
+          - "8081:8080"
