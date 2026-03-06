@@ -32,7 +32,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-               sh 'docker build -t $DOCKER_IMAGE -f docker/Dockerfile .'
+               sh 'docker build -t saurab2h/scientific-calculator -f docker/Dockerfile .'
             }
         }
 
