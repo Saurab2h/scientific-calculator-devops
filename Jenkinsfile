@@ -55,5 +55,21 @@ pipeline {
                 sh 'docker rmi $DOCKER_USER/$IMAGE_NAME || true'
             }
         }
+
+	stage('Ansible Deployment') {
+    steps {
+        sh '''
+        # install ansible if not installed
+        if ! command -v ansible >/dev/null 2>&1; then
+            echo "Installing Ansible..."
+            apt update
+            apt install -y ansible
+        fi
+
+        ansible-playbook ansible/deploy.yml
+        '''
     }
 }
+    }
+}
+
