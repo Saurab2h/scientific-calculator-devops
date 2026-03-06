@@ -13,8 +13,7 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-                git branch: 'main',
-                url: 'https://github.com/Saurab2h/scientific-calculator-devops.git'
+                git 'https://github.com/Saurab2h/scientific-calculator-devops.git'
             }
         }
 
@@ -30,9 +29,21 @@ pipeline {
             }
         }
 
+        stage('Docker Login') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'USERNAME',
+                    passwordVariable: 'PASSWORD'
+                )]) {
+                    sh 'echo $PASSWORD | docker login -u $USERNAME --password-stdin'
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-               sh 'docker build -t saurab2h/scientific-calculator -f docker/Dockerfile .'
+                sh 'docker build -t $DOCKER_IMAGE -f docker/Dockerfile .'
             }
         }
 
