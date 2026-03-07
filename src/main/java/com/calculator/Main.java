@@ -29,6 +29,11 @@ public class Main {
 
             case 2:
                 System.out.print("Enter integer: ");
+                 if (!sc.hasNextInt()) {
+    System.out.println("Invalid input. Please enter an integer.");
+    return;
+}               
+
                 int n = sc.nextInt();
                 System.out.println("Result: " + calc.factorial(n));
                 break;
@@ -48,7 +53,7 @@ public class Main {
                 break;
 
             default:
-                System.out.println("Invalid option");
+    System.out.println("Invalid choice. Please select 1-4.");
         }
 
         sc.close();

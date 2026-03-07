@@ -1,5 +1,7 @@
 package com.calculator;
 
+import java.util.Scanner;
+import java.math.BigInteger;
 public class Calculator {
 
     // Square root √x
@@ -8,13 +10,21 @@ public class Calculator {
     }
 
     // Factorial x!
-    public long factorial(int x) {
-        long result = 1;
-        for(int i = 1; i <= x; i++) {
-            result = result * i;
-        }
-        return result;
+    public static BigInteger factorial(int n) {
+    
+    if (n < 0) {
+        System.out.println("Error: Factorial is not defined for negative numbers");
+        return BigInteger.ZERO;
     }
+
+     BigInteger result = BigInteger.ONE;
+
+    for (int i = 2; i <= n; i++) {
+        result = result.multiply(BigInteger.valueOf(i));
+    }
+
+    return result;
+}
 
     // Natural logarithm ln(x)
     public double log(double x) {

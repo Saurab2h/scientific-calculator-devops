@@ -1,5 +1,6 @@
 package com.calculator;
 
+import java.math.BigInteger;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -14,7 +15,7 @@ public class CalculatorTest {
 
     @Test
     public void testFactorial() {
-        assertEquals(120, c.factorial(5));
+        assertEquals(BigInteger.valueOf(120), Calculator.factorial(5));
     }
 
     @Test
